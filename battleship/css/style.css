@@ -1,0 +1,109 @@
+
+.complete_game{
+    color: white;
+    min-height: 1000px;
+    min-width: 725px;
+    max-height: 1000px;
+    background-color: black;
+}
+
+
+
+/* divs of main page */
+header {
+    text-align: center;
+    font-size: 4vw;
+}
+
+.titles {
+    display: flex;
+    justify-content: space-around;
+    font-size: 2vw;
+}
+
+.gameplay_container{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    
+}
+
+.board {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    margin: 30px;
+    height: 170px;
+    width: 160px;
+    background-color: rgb(47, 97, 99);
+}
+
+.player1_board_squares, .player2_board_squares {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    height:14px;
+    width: 14px;
+    background-color: cadetblue;
+    border: .25px solid white;
+}
+
+.bottom_container {
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.player1_ships, .player2_ships {
+    display: flex;
+    flex-flow: column;
+    margin: 12px 2px;
+    
+    
+   
+}
+.carrier {
+    height: 17px;
+    width: 80px;
+}
+
+.battleship {
+    height: 17px;
+    width: 63px;
+
+}
+
+.cruiser {
+    height: 17px;
+    width: 48px;
+}
+
+.submarine{
+    height: 17px;
+    width: 48px;    
+}
+
+.destroyer{
+    height: 16px;
+    width: 31px;
+}
+
+
+.p1ship, .p2ship {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+}
+
+.player1ShipContents {
+    height:14px;
+    width: 14px;
+    border: 1px solid gray;
+    background-color:  gray;
+}
+.player2ShipContents {
+    height:14px;
+    width: 14px;
+    border: 1px solid gray;
+    background-color: gray;
+}

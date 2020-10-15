@@ -1,19 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Notable&display=swap');
 
 /* ____________ MAIN PAGE DIVS ____________ */
+
 .complete_game{
     color: white;
     font-family: 'Notable', sans-serif;
     min-height: 1000px;
     min-width: 725px;
     max-height: 1000px;
-    background-color: rgb(19, 35, 70);
+    background-color: rgb(18, 30, 56);
 }
 
 header {
     text-align: center;
     font-size: 5vw;
     padding: 15px;
+    color: rgb(252, 255, 217);
 }
 
 .titles {
@@ -28,6 +30,14 @@ h2 {
 h3 {
     margin: 0px 125px;
 }
+.red {
+    color: rgb(211, 185, 185)
+}
+
+.blue {
+    color: rgb(197, 233, 252);
+}
+
 .gameplay_container{
     display: flex;
     flex-flow: row;
@@ -35,7 +45,7 @@ h3 {
     align-items: baseline;  
 }
 
-.bottom_container {
+.bottom_titles {
     height: 100px;
     display: flex;
     justify-content: space-evenly;
@@ -50,7 +60,6 @@ h3 {
     height: 170px;
     width: 160px;
     background-color: rgb(47, 97, 99);
-    background-image: url();
 }
 
 #player1_board {
@@ -67,7 +76,6 @@ h3 {
     justify-content: center;
     height:14px;
     width: 14px;
-    /* background-color: cadetblue; */
     border: .25px solid white;
     opacity: 0.5;
 }
@@ -102,16 +110,27 @@ h3 {
 
 .destroyer{
     height: 15px;
-    width: 31px;
+    width: 32px;
 }
 
-
-.p1ship, .p2ship {
+.p1ship {
     display: flex;
     flex-flow: row;
     justify-content: center;
-    background-color: rgb(41, 45, 59);
     border-radius: 6px;
+    opacity: 0.9;
+    z-index: 1;
+}
+
+
+
+.p2ship {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    background-color: rgb(56, 62, 65);
+    border-radius: 6px;
+    opacity: 0.9
 }
 
 .player1ShipContents {
@@ -120,7 +139,7 @@ h3 {
     border: 1px solid gray;
     background-color:  rgb(202, 196, 196);
     border-radius: 10px;
-    opacity: 0.2;
+    opacity: 0.3;
 }
 .player2ShipContents {
     height:14px;
@@ -128,5 +147,23 @@ h3 {
     border: 1px solid gray;
     background-color: rgb(202, 196, 196);
     border-radius: 10px;
-    opacity: 0.2;
+    opacity: 0.3;
+}
+
+@media (max-width: 900px) {
+    
+    .board {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        margin: 0px 30px;
+        height: 170px;
+        width: 160px;
+        background-color: rgb(47, 97, 99);
+    }
+
+    .destroyer{
+        height: 15px;
+        width: 30px;
+    }
 }

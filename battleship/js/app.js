@@ -40,9 +40,7 @@ let player2Data = {
 ///GAME SETUP///
 ////////////////
 
-//this builds the two game boards, assigin a letter and number to the class for each square on the board. Letters are rows, numbers are columns. 
-const columnLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-   
+//builds the two game boards and labels the divs 1 through 100 top to left, bottom right
 const buildBoard = (user) =>{
   for(let i = 1;  i <= 100; i++){
     const $boardSquares = $(`<div class="${user}_board_squares" id="${i}">`)
@@ -51,9 +49,6 @@ const buildBoard = (user) =>{
     $board.append($boardSquares)
     } 
 }
-
-
-
 
 //randomly places the computers ships and makes them disappear with opacity. the arrays below are pixel values for height on gamebaoard. 
 const carrierTop = [0, 17, 34, 51, 68, 85, 102, 119, 136, 153];
@@ -72,9 +67,11 @@ const placePlayer1Ships = () => {
     .css('left', (`${((Math.floor(Math.random() * 6) +9) * 16)}px`))
   $('#p1Destroyer').css('top', (`${destroyerTop[Math.floor(Math.random() * 10)]}px`))
     .css('left', (`${((Math.floor(Math.random() * 6) +10) * 16)}px`))
-  // $('.player1ShipContents').css('opacity',  '0.01') OPACITY!!!
+  $('.player1ShipContents').css('opacity',  '0') //makes ships disappear when start button is pushed
+  // $('.p1ship').css('opacity', '0') //makes ships disappear when start button is pushed
 }
 
+//takes the ID of where the ship was dropped on board and adds/subtracts the the correct amout of spaces according to the length of the ship. This is for HORIZONTAL ONLY
 const p2AddShipLocation = (ship, location)=>{
   const space = Number(location)
   if(ship === "p2Carrier") {
@@ -98,56 +95,104 @@ const p2AddShipLocation = (ship, location)=>{
     [ location, `${space  + 1}`], 
     console.log(player2Data.shipLocation.p2Destroyer)
   } else {
-    //NEED TO ADD BOARD RESET/REBUILD HERE!!!
+    alert('Unregistered....Please reset last dropped ship!')
     console.log('not working')
   }
 }
-
+//////////////////////
+///GENERAL GAMEPLAY///
+//////////////////////
 
 //starts the game after user clicks start button. 
 const startGame = () => {
   const $shipContents = $('.player1ShipContents')
   $('.start_button').remove() //removes start button
-  $('.player1_board_squares').css('background-color', 'cadetblue')
+  $('.player1_board_squares').css('background-color', '')
     .css('border-radius', '0') //resets player1 board
-  $('.player2_board_squares').css('background-color', 'cadetblue')
+  $('.player2_board_squares').css('background-color', '')
     .css('border-radius', '0') //resets player2 board
   $('.p1ship').draggable('disable') //disables drag functionality on player 1
   $('.p2ship').draggable('disable') //disables drag functionality on player 2
   placePlayer1Ships();  //runs start sequence
   $shipContents.on('click', userFires)
-  
-//   (e) => {
-//     $(e.target).css('background-color', 'red')
-//     .css('border-radius', '10px') 
-//     .css('opacity', '1')
-// })
-  
 }
 
+//checks game win conditions
+const checkForWinner = () => {
+  if(player1Data.destroyedShips.length === 5){
+    alert('Player 1 has lost!')
+  } else if (player2Data.destroyedShips.length === 5){ 
+    alert('Player 2 has lost!')
+  }
 
+}
 
+//checks player 1 score and pushes destroyed ships to player1 object
+const checkPlayer1Score = (shipStrength, target) => {
+  console.log(shipStrength)
+  if(shipStrength === 0){
+    player1Data.destroyedShips.push(target)
+    checkForWinner()
+    console.log(player1Data.destroyedShips)
+  }
+}
+//checks player 2 score and pushes destroyed ships to player2 object
+const checkPlayer2Score = (shipStrength, target) => {
+  console.log(shipStrength)
+  if(shipStrength === 0){
+    player2Data.destroyedShips.push(target)
+    checkForWinner()
+    console.log(player2Data.destroyedShips)
+  }
+}
 
 //////////////////////
 ///ATTACK SEQUENCES///
 //////////////////////
+
+const divsAlreadyClicked = []
 //when player 2 clicks on player 1 board, this will check the contents to see if its a hit or miss by comparing the class of the square clicked, then run the computer fire sequence
 const userFires = (e) => {
   const miss = e.target.classList.contains('player1_board_squares')
   const hit = e.target.classList.contains('player1ShipContents')
   const location = e.target.id
   const ship = 'player2Data.' + location
-  if(miss === true) {
+  if(divsAlreadyClicked.includes(location)){
+    alert(`You've already chosen this space. Work on your aim guy!`)
+}else if(miss === true) {
+    divsAlreadyClicked.push(location)
+    console.log(divsAlreadyClicked)
     console.log('that was a miss!')
     $(e.target).css('background-color', 'white')
+    .css('opacity', '.7')
     .css('border-radius', '10px') 
     setTimeout(computerFiresBack, 500) 
-  } else if(hit === true) {
+  } else if (hit === true) {
+    divsAlreadyClicked.push(location)
+    console.log(divsAlreadyClicked)
+    if(e.target.id === 'p1Carrier'){
+      player1Data.p1Carrier -=1
+      checkPlayer1Score(player1Data.p1Carrier, e.target.id)
+    } else if (e.target.id === 'p1Battleship'){
+      player1Data.p1Battleship -=1
+      checkPlayer1Score(player1Data.p1Battleship, e.target.id)
+    } else if (e.target.id === 'p1Cruiser'){
+      player1Data.p1Cruiser -=1
+      checkPlayer1Score(player1Data.p1Cruiser, e.target.id)
+    } else if (e.target.id === 'p1Submarine'){
+      player1Data.p1Submarine -=1
+      checkPlayer1Score(player1Data.p1Submarine, e.target.id)
+    } else if (e.target.id === 'p1Destroyer'){
+      player1Data.p1Destroyer -=1
+      checkPlayer1Score(player1Data.p1Destroyer, e.target.id)
+    }
     console.log(`HIT!`)
     $(e.target).css('background-color', 'red')
     .css('border-radius', '10px')
+    .css('opacity', '1')
     setTimeout(computerFiresBack, 500) 
   }
+  
 }
 
 //fires back after user shoots. a random div is picked by column(letter) vs row(number). The div shot at changes colors to white.
@@ -155,7 +200,7 @@ const numbersChosen = []
 const computerFiresBack = () => {
   console.log('COMPUTER FIRES BACK!')
   const id = Math.floor(Math.random() * 100) + 1 //picks a random number from 1-100 to compare to squares
-  const $square = $(document.body.children[0].children[2].children[3].children[`${id}` - 1]) //accesses the player2 gameboard to change color for missed shots
+  const $square = $(document.body.children[0].children[3].children[2].children[`${id}` - 1]) //accesses the player2 gameboard to change color for missed shots
   if(numbersChosen.includes(id) === true ) { //if the number selected by mathrandom has already been chosen. 
     computerFiresBack() //repeat function
   } else if (player2Data.shipLocation.p2Carrier.includes(`${id}`)){ //if the number selected by mathrandom is in the player Object ship location
@@ -164,44 +209,42 @@ const computerFiresBack = () => {
     player2Data.p2Carrier -= 1 //subtracts points from ship
     console.log('COMPUTER HIT!')
     numbersChosen.push(id)
-    // checkScore()
+    checkPlayer2Score(player2Data.p2Carrier, 'p2Carrier')
   } else if (player2Data.shipLocation.p2Battleship.includes(`${id}`) === true){ //if the number selected by mathrandom is in the player Object ship location
     const shipDivHit = player2Data.shipLocation.p2Battleship.indexOf(`${id}`)+ 1; //uses the random number to check where in the ship location array it is and subtracts 1. 
     $(`#p2Battleship${shipDivHit}`).css('background-color', 'red').css('border-radius', '10px') //using the index number, this selects the correct div in the ship container.
     player2Data.p2Battleship -= 1 //subtracts points from ship
     console.log('COMPUTER HIT!')
     numbersChosen.push(id)
-    // checkScore()
+    checkPlayer2Score(player2Data.p2Battleship, 'p2Battleship')
   } else if (player2Data.shipLocation.p2Cruiser.includes(`${id}`) === true) { //if the number selected by mathrandom is in the player Object ship location
     const shipDivHit = player2Data.shipLocation.p2Cruiser.indexOf(`${id}`)+ 1; //uses the random number to check where in the ship location array it is and subtracts 1. 
     $(`#p2Cruiser${shipDivHit}`).css('background-color', 'red').css('border-radius', '10px') //using the index number, this selects the correct div in the ship container.
     player2Data.p2Cruiser -= 1 //subtracts points from ship
     console.log('COMPUTER HIT!')
     numbersChosen.push(id)
-    // checkScore()
+    checkPlayer2Score(player2Data.p2Cruiser, 'p2Cruiser')
   } else if (player2Data.shipLocation.p2Submarine.includes(`${id}`) === true) { //if the number selected by mathrandom is in the player Object ship location
     const shipDivHit = player2Data.shipLocation.p2Submarine.indexOf(`${id}`)+ 1; //uses the random number to check where in the ship location array it is and subtracts 1. 
     $(`#p2Submarine${shipDivHit}`).css('background-color', 'red').css('border-radius', '10px') //using the index number, this selects the correct div in the ship container.
     player2Data.p2Submarine -= 1 //subtracts points from ship
     console.log('COMPUTER HIT!')
     numbersChosen.push(id)
-    // checkScore()
+    checkPlayer2Score(player2Data.p2Submarine, 'p2Submarine')
   } else if (player2Data.shipLocation.p2Destroyer.includes(`${id}`) === true) { //if the number selected by mathrandom is in the player Object ship location
     const shipDivHit = player2Data.shipLocation.p2Destroyer.indexOf(`${id}`)+ 1; //uses the random number to check where in the ship location array it is and subtracts 1. 
     $(`#p2Destroyer${shipDivHit}`).css('background-color', 'red').css('border-radius', '10px') //using the index number, this selects the correct div in the ship container.
     player2Data.p2Destroyer-= 1 //subtracts points from ship
     console.log('COMPUTER HIT!')
     numbersChosen.push(id)
-    // checkScore()
-    // computerFiresBack()
-  } else {
-  $square.css('background-color', 'white')
-  $square.css('border-radius', '10px')
-  numbersChosen.push(id)
-  console.log(numbersChosen)
+    checkPlayer2Score(player2Data.p2Destroyer, 'p2Destroyer')
+  } else { //if the computer shot is a miss, change the div white
+    $square.css('background-color', 'white')
+    $square.css('border-radius', '10px')
+    numbersChosen.push(id)
+    console.log(numbersChosen)
+  }
 }
-}
-
   
 /////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////
@@ -213,8 +256,7 @@ $(()=> {
   buildBoard('player2') //builds player 2 board
   $($startButton).on('click', startGame)//when start button clicked, ships cant be moved
 
-
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
   /////////////////////////////
   ///JQuery UI Drag and Drop///
   /////////////////////////////
@@ -223,47 +265,53 @@ $(()=> {
     $( ".p1ship").draggable({ 
       cursor: "crosshair",
       revert: "invalid",
+    
       grid: [ 16, 17 ],
-     });
+    });
     $( ".p2ship").draggable({ 
       cursor: "crosshair",
       revert: "invalid",
+      
       grid: [ 16, 17 ],
-     });
+    });
     
-   
-  
     //lets the user drop their ships on only their board, while adding the class of ship where its dropped to the square.
     $( ".player2_board_squares" ).droppable({
       accept: ".p2ship",
-      drop: function(e) {
+      drop: function(e, ui) {
+        console.log(ui)
        const location = e.target.id //gets the div the ship is dropped on
        const ship = document.getElementById(`${e.originalEvent.target.id}`).parentElement.id //finds the id of the ship dropped
-       $(this).addClass(`${e.originalEvent.target.id}`).find( ".player2_board_squares" )        
-       p2AddShipLocation(ship, location)
-           
+        $(this).addClass(`${e.originalEvent.target.id}`).find( ".player2_board_squares" )        
+        p2AddShipLocation(ship, location)    
       },
     });
   });   
 })
-//////////////////////////////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////// ONLY NOTES BELOW THIS LINE PLEASE!//////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////
 ///to do list///
 ////////////////
 
 //VISUAL AND INTERACTION
+//media query for smaller screens!
+//fix drag and drop for mobile
+//fix overlapping ships on boards
 //give ships the ability to rotate
 //make overall game look better
 //make modal with directions
 //make modal with YOU WON or YOU LOST!
-
-// data
-//build player objects with ships
-//build game statistics
+//when someone wins, create reset button to start over without reloading.
+//fix bottom container spacing
+//make ships reappear in ships lost section
 
 //LOGIC
-// hits to player 2 are changed to red circle inside of square
-//register hits on ships, decreasing score value
-//register sunken ships
+
+//Temp fix player 1 ship placement to 5 different positions.
+
+//BUGS/THINGS TO FIX
+//stop player 1 ships from overlapping on startup
+//stop player 2 ships from being able to be placed outside of board

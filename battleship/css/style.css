@@ -2,6 +2,11 @@
 
 /* ____________ MAIN PAGE DIVS ____________ */
 
+body{
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(18, 30, 56);
+}
 .complete_game{
     display: flex;
     flex-direction: column;
@@ -10,8 +15,7 @@
     font-family: 'Notable', sans-serif;
     width: 100vw;
     height: 100vh;
-    background-color: rgb(18, 30, 56);
-
+    /* background-color: rgb(18, 30, 56); */
 }
 
 header {
@@ -46,8 +50,10 @@ h3 {
     display: flex;
     flex-flow: row;
     justify-content: center;
-    align-items: center; 
-   
+    align-items: baseline; 
+    height: auto;
+    width: 100vw;
+    min-width: 750px;
 }
 
 
@@ -185,6 +191,13 @@ h3 {
 }
 
 @media (max-width: 900px) {
+    .complete_game {
+        min-width: 900px;
+        height: 100vh;
+        width: 100vw;
+        /* min-height: auto; */
+        /* height: auto; */
+    }
     
     .board {
         display: flex;
